@@ -21,9 +21,6 @@ public class PagerAdapter extends FragmentPagerAdapter {
 
     public int noOfTabs;
 
-    private String[] tabTitles = new String[] { "Highlights", "Science", "Gaming", "Movies" };
-    private int[] imageResId = { R.drawable.highlights, R.drawable.science, R.drawable.gaming, R.drawable.movies };
-
     public PagerAdapter(@NonNull FragmentManager fm, int noOfTabs) {
         super(fm);
         this.noOfTabs = noOfTabs;
@@ -50,6 +47,4 @@ public class PagerAdapter extends FragmentPagerAdapter {
     public int getCount() {
         return noOfTabs;
     }
-
-
 }

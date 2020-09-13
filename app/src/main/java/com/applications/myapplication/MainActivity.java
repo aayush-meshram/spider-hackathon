@@ -1,6 +1,7 @@
 package com.applications.myapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
@@ -12,11 +13,16 @@ import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TabHost;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
 
@@ -30,7 +36,8 @@ public class MainActivity extends AppCompatActivity {
     private String[] tabTitles = new String[]{"Highlights", "Science", "Gaming", "Movies"};
     private int[] imageResId = {R.drawable.highlights, R.drawable.science, R.drawable.gaming, R.drawable.movies};
 
-    BottomSheetBehavior bottomSheetBehavior;
+    CoordinatorLayout coordinatorLayout;
+    TabLayout tabLayout;
 
 
     @Override
@@ -38,32 +45,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.other_layout);
 
+        Intent intent = getIntent();
+        int i = intent.getIntExtra("tabNo", 0);
+
+        tabLayout = findViewById(R.id.tabLayout);
+        coordinatorLayout = findViewById(R.id.cLayout);
 
         final ViewPager viewPager = findViewById(R.id.viewPager);
+        final PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
+        viewPager.setAdapter(pagerAdapter);
 
-        TabLayout tabLayout = findViewById(R.id.tabLayout);
-        /*View view = findViewById(R.id.nsv);
-        bottomSheetBehavior = BottomSheetBehavior.from(view);
-        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);*/
-
-        TabItem tabHighlights = findViewById(R.id.tab_highlights);
-        TabItem tabScience = findViewById(R.id.tab_science);
-        TabItem tabGaming = findViewById(R.id.tab_gaming);
-        TabItem tabMovies = findViewById(R.id.tab_movies);
-
-        /*Button button = (Button)findViewById(R.id.press);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-            }
-        });*/
-
-
-        viewPager.setAdapter(new PagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount()));
         tabLayout.setupWithViewPager(viewPager);
-
-
 
         tabLayout.getTabAt(0).setCustomView(R.layout.custom_tab);
 
@@ -73,7 +65,18 @@ public class MainActivity extends AppCompatActivity {
 
         tabLayout.getTabAt(3).setCustomView(R.layout.custom_tab3);
 
-        BottomSheetUtils.setupViewPager(viewPager);
+        viewPager.setCurrentItem(i);
+
+
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goBack();
+                Intent intent = new Intent(MainActivity.this, MainActivity2.class);
+                startActivity(intent);
+            }
+        });
 
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -93,5 +96,12 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    public void goBack()    {
+        YoYo.with(Techniques.SlideOutDown)
+                .duration(500)
+                .repeat(0)
+                .playOn(coordinatorLayout);
     }
 }
